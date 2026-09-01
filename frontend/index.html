@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>InfinityArena</title>
+<link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">∞</span>
+    <span class="title">InfinityArena</span>
+    <span class="tagline">OpenAI-compatible LLM agentic-coding benchmark</span>
+  </div>
+  <nav>
+    <button class="navbtn active" data-view="configure">Configure &amp; Run</button>
+    <button class="navbtn" data-view="leaderboard">Leaderboard</button>
+    <button class="navbtn" data-view="sessions">Sessions</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ============== CONFIGURE & RUN ============== -->
+  <section class="view active" id="view-configure">
+    <div class="card">
+      <h2>1. Pick a benchmark prompt</h2>
+      <div class="row">
+        <select id="promptSelect" class="grow"></select>
+        <button id="reloadPrompts" class="ghost">↻</button>
+      </div>
+      <div class="meta" id="promptMeta"></div>
+      <label class="lbl">Prompt (editable)</label>
+      <textarea id="promptText" rows="6" spellcheck="false"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>2. Add model endpoints</h2>
+      <p class="muted">API keys stay on the server. The browser never sees them after submission.</p>
+      <div id="models"></div>
+      <div class="row">
+        <button id="addModel" class="primary">+ Add model</button>
+        <button id="runBtn" class="primary glow">▶ Run benchmark on all models</button>
+        <span class="spacer"></span>
+        <span id="runStatus" class="muted"></span>
+      </div>
+    </div>
+
+    <div class="card" id="judgeCard">
+      <h2>3. (Optional) LLM judge</h2>
+      <p class="muted">If set, this model scores every run. Otherwise a deterministic heuristic is used.</p>
+      <div class="row">
+        <label class="lbl">Judge name</label>
+        <input id="judgeName" placeholder="judge-1" />
+        <label class="lbl">base URL</label>
+        <input id="judgeBase" placeholder="https://api.openai.com/v1" />
+        <label class="lbl">model</label>
+        <input id="judgeModel" placeholder="gpt-4o-mini" />
+        <label class="lbl">api key</label>
+        <input id="judgeKey" type="password" placeholder="sk-..." />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== LEADERBOARD ============== -->
+  <section class="view" id="view-leaderboard">
+    <div class="card">
+      <h2>Leaderboard</h2>
+      <p class="muted" id="lbEmpty">No runs yet. Run a benchmark to populate this view.</p>
+      <table class="grid" id="lbTable" style="display:none">
+        <thead>
+          <tr>
+            <th data-sort="rank">#</th>
+            <th data-sort="model">Model</th>
+            <th data-sort="prompt">Prompt</th>
+            <th data-sort="correctness">Correctness</th>
+            <th data-sort="tool_usage">Tool usage</th>
+            <th data-sort="autonomy">Autonomy</th>
+            <th data-sort="efficiency">Efficiency</th>
+            <th data-sort="avg">Avg</th>
+            <th data-sort="runtime">Runtime</th>
+            <th data-sort="tools">Tools</th>
+            <th data-sort="failed">Failed</th>
+            <th data-sort="status">Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="lbBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============== SESSIONS ============== -->
+  <section class="view" id="view-sessions">
+    <div class="card">
+      <h2>Saved sessions</h2>
+      <p class="muted">Stored locally as JSON in <code>./sessions/</code>.</p>
+      <table class="grid" id="sessTable">
+        <thead><tr>
+          <th>Created</th><th>Prompt</th><th># models</th><th>Avg score</th><th></th>
+        </tr></thead>
+        <tbody id="sessBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============== RUN DETAIL ============== -->
+  <section class="view" id="view-detail">
+    <div class="card">
+      <div class="row">
+        <button class="ghost" id="backBtn">← Back</button>
+        <h2 id="detailTitle" style="margin:0"></h2>
+        <span class="spacer"></span>
+        <span class="muted" id="detailMeta"></span>
+      </div>
+      <div class="row stats" id="detailStats"></div>
+      <h3>Judge verdict</h3>
+      <div id="detailJudge" class="judge"></div>
+      <h3>Final answer</h3>
+      <pre id="detailFinal" class="final"></pre>
+      <h3>Trace</h3>
+      <div id="detailTrace" class="trace"></div>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
